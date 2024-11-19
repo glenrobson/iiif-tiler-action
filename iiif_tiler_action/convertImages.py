@@ -17,7 +17,6 @@ def convertImages():
     output = os.environ["OUTPUT"]
     for filename in os.listdir(input_dir):
         (id, extension) =os.path.splitext(filename)
-        print (f"extension {extension}")
         if extension not in (".md"):
             if not os.path.exists(f"{output}/{id}"):
                 try:
