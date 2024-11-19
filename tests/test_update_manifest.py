@@ -3,7 +3,7 @@ import os
 import json
 import tempfile
 
-from iiif_level0_action import updateManifest
+from iiif_tiler_action import updateManifest
 
 class TestUpdateManifest(unittest.TestCase):
     def createDummyImage(self, name, infoJsonFile):

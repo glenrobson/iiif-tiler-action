@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from iiif_level0_action import convertImages
+from iiif_tiler_action import convertImages
 
 class TestConvertImages(unittest.TestCase):
 
