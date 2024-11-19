@@ -1,0 +1,74 @@
+name: 'iiif-level0-action'
+description: 'A github action to create level0 tiles with a Github action'
+inputs:
+  input-dir2:  # id of input
+    description: 'Directory where input images for IIIF v2 are located'
+    required: false
+    default: 'images/uploads/2'
+  input-dir3:  # id of input
+    description: 'Directory where input images for IIIF v3 are located'
+    required: false
+    default: 'images/uploads/3'
+  output-dir: 
+     description: 'Directory to put the generated images'
+     required: false
+     default: 'images'  
+  manifest: 
+     description: 'Manifest to link to the generated images'
+     required: false
+     default: 'images/manifest.json'  
+
+outputs:
+  generation:
+    description: "Generation output"
+    value: ${{ steps.random-number-generator.outputs.random-number }}
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
+      with:
+        # Semantic version range syntax or exact version of a Python version
+        python-version: '3.x' 
+        # Optional - x64 or x86 architecture, defaults to x64
+        architecture: 'x64' 
+    - name: Cache pip
+      uses: actions/cache@v2
+      with:
+        # This path is specific to Ubuntu
+        path: ~/.cache/pip
+        # Look to see if there is a cache hit for the corresponding requirements file
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          ${{ runner.os }}-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Download iiif-tiler.jar
+      run: curl -LO "https://github.com/glenrobson/iiif-tiler/releases/latest/download/iiif-tiler.jar"
+
+    - name: Convert images v2
+      run: python iiif-level0-action/convertImages.py
+      shell: bash
+      env:
+        INPUT_DIR: ${{ inputs.input-dir2 }}
+        IIIF_VERSION: 2
+        OUTPUT: ${{ inputs.output-dir }}
+
+    - name: Convert images v3
+      run: python iiif-level0-action/convertImages.py
+      shell: bash
+      env:
+        INPUT_DIR: ${{ inputs.input-dir3 }}
+        IIIF_VERSION: 3
+        OUTPUT: ${{ inputs.output-dir }}
+   
+    - name: Update Manifest
+      run: python iiif-level0-action/updateManifest.py
+      shell: bash
+      env:
+        MANIFEST: ${{ inputs.manifest }}
