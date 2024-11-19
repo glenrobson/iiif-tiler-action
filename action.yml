@@ -72,3 +72,4 @@ runs:
       shell: bash
       env:
         MANIFEST: ${{ inputs.manifest }}
+        IMAGE_DIR: ${{ inputs.output-dir }}
