@@ -1,11 +1,11 @@
 name: 'iiif-level0-action'
 description: 'A github action to create level0 tiles with a Github action'
 inputs:
-  input-dir2:  # id of input
+  input-dir-v2:  # id of input
     description: 'Directory where input images for IIIF v2 are located'
     required: false
     default: 'images/uploads/2'
-  input-dir3:  # id of input
+  input-dir-v3:  # id of input
     description: 'Directory where input images for IIIF v3 are located'
     required: false
     default: 'images/uploads/3'
@@ -53,7 +53,7 @@ runs:
       run: python -m iiif_tiler_action.convertImages
       shell: bash
       env:
-        INPUT_DIR: ${{ inputs.input-dir2 }}
+        INPUT_DIR: ${{ inputs.input-dir-v2 }}
         IIIF_VERSION: 2
         OUTPUT: ${{ inputs.output-dir }}
         PYTHONPATH: ${{ github.action_path }}
@@ -62,11 +62,15 @@ runs:
       run: python -m iiif_tiler_action.convertImages
       shell: bash
       env:
-        INPUT_DIR: ${{ inputs.input-dir3 }}
+        INPUT_DIR: ${{ inputs.input-dir-v3 }}
         IIIF_VERSION: 3
         OUTPUT: ${{ inputs.output-dir }}
         PYTHONPATH: ${{ github.action_path }}
-   
+
+   - name: Remove iiif-tiler
+      run: rm iiif-tiler.jar
+      shell: bash
+        
     - name: Update Manifest
       run: python -m iiif_tiler_action.updateManifest
       shell: bash
