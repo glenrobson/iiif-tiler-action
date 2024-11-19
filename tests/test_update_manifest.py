@@ -28,6 +28,7 @@ class TestUpdateManifest(unittest.TestCase):
 
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir)
             self.assertEqual(manifest.id, "https://test.github.io/testRepo/images/manifest.json")
+            self.assertEqual(len(manifest.items), 1, "Manifest should have only one canvas")
 
     def test_v2_manifest(self):
         infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
@@ -37,4 +38,5 @@ class TestUpdateManifest(unittest.TestCase):
 
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir)
             self.assertEqual(manifest.id, "https://test.github.io/testRepo/images/manifest.json")
+            self.assertEqual(len(manifest.items), 1, "Manifest should have only one canvas")
 

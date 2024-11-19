@@ -54,7 +54,6 @@ def createManifest(username, repo, manifestName, imageDir):
                 annotationPage = AnnotationPage(id=f"{root}/annotation/AnnoPage")
                 annotationPage.add_item(annotation)
                 canvas.add_item(annotationPage)
-                manifest.add_item(canvas)
 
     return manifest            
 
