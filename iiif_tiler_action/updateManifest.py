@@ -25,6 +25,7 @@ def createManifest(username, repo, manifestName, imageDir):
 
     for image in os.listdir(imageDir):
         if os.path.isdir(f"{imageDir}/{image}") and os.path.exists(f"{imageDir}/{image}/info.json"):
+            print (f"Adding {imageDir}/{image}/info.json to Manifest")
             with open(f"{imageDir}/{image}/info.json", "r") as file:
                 # Check image is valid before adding
                 infoJson = json.load(file)
@@ -68,5 +69,6 @@ if __name__ == "__main__":
     (username, repo, manifestName, imageDir) = getEnvironment()
 
     manifest = createManifest(username, repo, manifestName, imageDir)
+    print (f"Writing out manifest to {manifestName}")
     with open(manifestName, "w") as file:
         file.write(manifest.jsonld(indent=2))
