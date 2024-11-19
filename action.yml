@@ -67,7 +67,7 @@ runs:
         OUTPUT: ${{ inputs.output-dir }}
         PYTHONPATH: ${{ github.action_path }}
 
-   - name: Remove iiif-tiler
+    - name: Remove iiif-tiler
       run: rm iiif-tiler.jar
       shell: bash
         
