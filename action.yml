@@ -59,12 +59,13 @@ runs:
         PYTHONPATH: ${{ github.action_path }}
 
     - name: Convert images v3
-      run: python ${{ github.action_path }}/iiif_tiler_action/convertImages.py
+      run: python -m iiif_tiler_action.convertImages
       shell: bash
       env:
         INPUT_DIR: ${{ inputs.input-dir3 }}
         IIIF_VERSION: 3
         OUTPUT: ${{ inputs.output-dir }}
+        PYTHONPATH: ${{ github.action_path }}
    
     - name: Update Manifest
       run: python ${{ github.action_path }}/iiif_tiler_action/updateManifest.py

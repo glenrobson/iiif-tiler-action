@@ -1,7 +1,5 @@
 import subprocess
 import os
-import os, sys
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from . import updateManifest
 
 def getUserRepo():
@@ -16,14 +14,20 @@ def generateCommand(filename):
 
 def convertImages():
     input_dir = os.environ["INPUT_DIR"]
+    output = os.environ["OUTPUT"]
     for filename in os.listdir(input_dir):
-        try:
-            command = generateCommand(f"{input_dir}/{filename}")
-            result = subprocess.run(command, shell=True, text=True, capture_output=True, check=True)
-            print (result)
-        except subprocess.CalledProcessError as e:
-            print(f"Command failed with return code {e.returncode}")
-            print(f"Error message: {e.stderr}")
+        id=os.path.splitext(filename)[0]
+        if not os.path.exists(f"{output}/{id}"):
+            try:
+                print(f'Converting {filename} to {output}/{id}')        
+                command = generateCommand(f"{input_dir}/{filename}")
+                result = subprocess.run(command, shell=True, text=True, capture_output=True, check=True)
+                print (result)
+            except subprocess.CalledProcessError as e:
+                print(f"Command failed with return code {e.returncode}")
+                print(f"Error message: {e.stderr}")
+        else:
+            print(f'Image {filename} already exists in {output}/{id}')        
 
 if __name__ == "__main__":
     convertImages()
