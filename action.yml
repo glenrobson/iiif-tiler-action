@@ -54,12 +54,13 @@ runs:
       shell: bash
 
     - name: Convert images v2
-      run: python ${{ github.action_path }}/iiif_tiler_action/convertImages.py
+      run: python -m  iiif_tiler_action.convertImages.py
       shell: bash
       env:
         INPUT_DIR: ${{ inputs.input-dir2 }}
         IIIF_VERSION: 2
         OUTPUT: ${{ inputs.output-dir }}
+        PYTHONPATH: ${{ github.action_path }}
 
     - name: Convert images v3
       run: python ${{ github.action_path }}/iiif_tiler_action/convertImages.py
