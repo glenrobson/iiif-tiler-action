@@ -68,8 +68,9 @@ runs:
         PYTHONPATH: ${{ github.action_path }}
    
     - name: Update Manifest
-      run: python ${{ github.action_path }}/iiif_tiler_action/updateManifest.py
+      run: python -m iiif_tiler_action.updateManifest
       shell: bash
       env:
         MANIFEST: ${{ inputs.manifest }}
         IMAGE_DIR: ${{ inputs.output-dir }}
+        PYTHONPATH: ${{ github.action_path }}

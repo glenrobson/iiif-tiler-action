@@ -36,6 +36,7 @@ def createManifest(username, repo, manifestName, imageDir):
 
                     # V2 profile contains profile URI plus extra features
                     service = infoJson
+                    service["@type"] = "ImageService2"
                     body.service = [service]
                     body.id = f'{infoJson["@id"]}/full/full/0/default.jpg'
                     body.format = "image/jpeg"

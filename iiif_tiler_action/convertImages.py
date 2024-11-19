@@ -16,18 +16,22 @@ def convertImages():
     input_dir = os.environ["INPUT_DIR"]
     output = os.environ["OUTPUT"]
     for filename in os.listdir(input_dir):
-        id=os.path.splitext(filename)[0]
-        if not os.path.exists(f"{output}/{id}"):
-            try:
-                print(f'Converting {filename} to {output}/{id}')        
-                command = generateCommand(f"{input_dir}/{filename}")
-                result = subprocess.run(command, shell=True, text=True, capture_output=True, check=True)
-                print (result)
-            except subprocess.CalledProcessError as e:
-                print(f"Command failed with return code {e.returncode}")
-                print(f"Error message: {e.stderr}")
+        (id, extension) =os.path.splitext(filename)
+        print (f"extension {extension}")
+        if extension not in (".md"):
+            if not os.path.exists(f"{output}/{id}"):
+                try:
+                    print(f'Converting {filename} to {output}/{id}')        
+                    command = generateCommand(f"{input_dir}/{filename}")
+                    result = subprocess.run(command, shell=True, text=True, capture_output=True, check=True)
+                    print (result.stdout)
+                except subprocess.CalledProcessError as e:
+                    print(f"Command failed with return code {e.returncode}")
+                    print(f"Error message: {e.stderr}")
+            else:
+                print(f'Image {filename} already exists in {output}/{id}')        
         else:
-            print(f'Image {filename} already exists in {output}/{id}')        
+            print (f"Skipping {filename}")        
 
 if __name__ == "__main__":
     convertImages()

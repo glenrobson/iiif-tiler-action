@@ -15,6 +15,9 @@ class TestUpdateManifest(unittest.TestCase):
             with open(f"{name}/info.json", "w") as file:
                 json.dump(infoJson, file)
 
+    def setUp(self):
+        # Ensure we start in the current project directory 
+        os.chdir(os.path.dirname(os.path.dirname(__file__)))            
 
     def test_manifest(self):
         infoJsonFile = os.path.abspath("tests/fixtures/IMG_5969.json")
@@ -26,4 +29,12 @@ class TestUpdateManifest(unittest.TestCase):
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir)
             self.assertEqual(manifest.id, "https://test.github.io/testRepo/images/manifest.json")
 
-        
+    def test_v2_manifest(self):
+        infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            os.chdir(tmpdir)
+            self.createDummyImage("IMG_5969", infoJsonFile)
+
+            manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir)
+            self.assertEqual(manifest.id, "https://test.github.io/testRepo/images/manifest.json")
+
