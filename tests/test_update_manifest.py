@@ -64,10 +64,24 @@ class TestUpdateManifest(unittest.TestCase):
         infoJsonFile = os.path.abspath("tests/fixtures/IMG_5969.json")
         with tempfile.TemporaryDirectory() as tmpdir:
             os.chdir(tmpdir)
-            self.createDummyImage("IMG_v2", infoJsonFile)
+            self.createDummyImage("IMG_v3", infoJsonFile)
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
             service = manifest["items"][0]["items"][0]["items"][0]["body"]["service"][0]
             self.assertTrue("sizes" in service, f"Missing sizes inside service: \n{service}")
+
+    def test_2_canvas(self):        
+        infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
+        infoJsonFile2 = os.path.abspath("tests/fixtures/IMG_5969.json")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            os.chdir(tmpdir)
+            self.createDummyImage("IMG_v2", infoJsonFile)
+            self.createDummyImage("IMG_v3", infoJsonFile2)
+
+            manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
+            self.assertTrue("@id" in manifest["items"][0]["items"][0]["items"][0]["body"]["service"][0], "First should be v2")
+            self.assertEqual(manifest["items"][0]["items"][0]["items"][0]["body"]["service"][0]["@id"], "https://iiif-test.github.io/test2/images/IMG_5969_V2", "First canvas has incorrect info.json")
+            self.assertTrue("id" in manifest["items"][1]["items"][0]["items"][0]["body"]["service"][0], "Second canvas should be v2")
+            self.assertEqual(manifest["items"][1]["items"][0]["items"][0]["body"]["service"][0]["id"], "https://iiif-test.github.io/test2/images/IMG_5969", "Second canvas has incorrect info.json")
 
     def test_malformed_image(self):
         infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")

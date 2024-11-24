@@ -71,10 +71,10 @@ def createManifest(username, repo, manifestName, imageDir, skipImageValidation=F
     for canvas in manifestJson["items"]:
         for annoPage in canvas["items"]:
             for anno in annoPage["items"]:
-                if "@id" in service:
-                    anno["body"]["service"][0] = info_jsons[service["@id"]]
+                if "@id" in anno["body"]["service"][0]:
+                    anno["body"]["service"][0] = info_jsons[anno["body"]["service"][0]["@id"]]
                 else:
-                    anno["body"]["service"][0] = info_jsons[service["id"]]
+                    anno["body"]["service"][0] = info_jsons[anno["body"]["service"][0]["id"]]
     return manifestJson                    
 
 def getEnvironment():
