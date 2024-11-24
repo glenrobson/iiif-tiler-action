@@ -56,6 +56,7 @@ def createManifest(username, repo, manifestName, imageDir, skipImageValidation=F
 
 
                 canvas = manifest.make_canvas(id=f"{root}/canvas/", height=infoJson['height'], width=infoJson['width'])
+                canvas.add_label(image, language="none")
                 annotation = Annotation(id=f"{root}/annotation/", motivation='painting', body=body, target=canvas.id)
 
                 annotationPage = AnnotationPage(id=f"{root}/annotation/AnnoPage")

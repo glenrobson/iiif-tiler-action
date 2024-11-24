@@ -39,6 +39,18 @@ class TestUpdateManifest(unittest.TestCase):
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
             self.assertEqual(manifest.id, "https://test.github.io/testRepo/images/manifest.json")
             self.assertEqual(len(manifest.items), 1, "Manifest should have only one canvas")
+  
+    def test_canvas_label(self):
+        infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            os.chdir(tmpdir)
+            self.createDummyImage("IMG_5969", infoJsonFile)
+
+            manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
+            self.assertIsNotNone(manifest.items[0].label, "Canvas should have a label")
+            self.assertTrue("none" in manifest.items[0].label, "Label should have langauge")
+            self.assertTrue(isinstance(manifest.items[0].label["none"], list), "Label should be an array")
+            self.assertEqual(manifest.items[0].label["none"][0], "IMG_5969", "Label should match image name")
 
     def test_malformed_image(self):
         infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
