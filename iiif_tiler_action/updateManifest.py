@@ -23,6 +23,7 @@ def getUserRepo():
 def createManifest(username, repo, manifestName, imageDir, skipImageValidation=False):    
     manifest = Manifest(id=f"https://{username}.github.io/{repo}/{manifestName}", label=f"All images loaded in {username}/{repo} project")
 
+    info_jsons = {}
     for image in os.listdir(imageDir):
         if os.path.isdir(f"{imageDir}/{image}") and os.path.exists(f"{imageDir}/{image}/info.json"):
             print (f"Adding {imageDir}/{image}/info.json to Manifest")
@@ -48,11 +49,13 @@ def createManifest(username, repo, manifestName, imageDir, skipImageValidation=F
                     body.service = [service]
                     body.id = f'{infoJson["@id"]}/full/full/0/default.jpg'
                     body.format = "image/jpeg"
+                    info_jsons[infoJson["@id"]] = infoJson
                 else:
                     service = infoJson
                     body.service = [service]
                     body.id = f'{infoJson["id"]}/full/max/0/default.jpg'
                     body.format = "image/jpeg"
+                    info_jsons[infoJson["id"]] = infoJson
 
 
                 canvas = manifest.make_canvas(id=f"{root}/canvas/", height=infoJson['height'], width=infoJson['width'])
@@ -63,7 +66,16 @@ def createManifest(username, repo, manifestName, imageDir, skipImageValidation=F
                 annotationPage.add_item(annotation)
                 canvas.add_item(annotationPage)
 
-    return manifest            
+    manifestJson = json.loads(manifest.json())
+    # Add full info.jsons
+    for canvas in manifestJson["items"]:
+        for annoPage in canvas["items"]:
+            for anno in annoPage["items"]:
+                if "@id" in service:
+                    anno["body"]["service"][0] = info_jsons[service["@id"]]
+                else:
+                    anno["body"]["service"][0] = info_jsons[service["id"]]
+    return manifestJson                    
 
 def getEnvironment():
     (username, repo) = getUserRepo()
@@ -77,5 +89,8 @@ if __name__ == "__main__":
 
     manifest = createManifest(username, repo, manifestName, imageDir)
     print (f"Writing out manifest to {manifestName}")
-    with open(manifestName, "w") as file:
-        file.write(manifest.jsonld(indent=2))
+    #with open(manifestName, "w") as file:
+    #    file.write(manifest.jsonld(indent=2))
+    # Writing JSON to a file
+    with open(manifestName, "w") as json_file:
+        json.dump(manifest, json_file, indent=4)
