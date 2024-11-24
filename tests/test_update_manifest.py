@@ -21,14 +21,13 @@ class TestUpdateManifest(unittest.TestCase):
 
     def test_manifest(self):
         infoJsonFile = os.path.abspath("tests/fixtures/IMG_5969.json")
-        print (infoJsonFile)
         with tempfile.TemporaryDirectory() as tmpdir:
             os.chdir(tmpdir)
             self.createDummyImage("IMG_5969", infoJsonFile)
 
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
-            self.assertEqual(manifest.id, "https://test.github.io/testRepo/images/manifest.json")
-            self.assertEqual(len(manifest.items), 1, "Manifest should have only one canvas")
+            self.assertEqual(manifest["id"], "https://test.github.io/testRepo/images/manifest.json")
+            self.assertEqual(len(manifest["items"]), 1, "Manifest should have only one canvas")
 
     def test_v2_manifest(self):
         infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
@@ -37,8 +36,8 @@ class TestUpdateManifest(unittest.TestCase):
             self.createDummyImage("IMG_5969", infoJsonFile)
 
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
-            self.assertEqual(manifest.id, "https://test.github.io/testRepo/images/manifest.json")
-            self.assertEqual(len(manifest.items), 1, "Manifest should have only one canvas")
+            self.assertEqual(manifest["id"], "https://test.github.io/testRepo/images/manifest.json")
+            self.assertEqual(len(manifest["items"]), 1, "Manifest should have only one canvas")
   
     def test_canvas_label(self):
         infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
@@ -47,10 +46,28 @@ class TestUpdateManifest(unittest.TestCase):
             self.createDummyImage("IMG_5969", infoJsonFile)
 
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
-            self.assertIsNotNone(manifest.items[0].label, "Canvas should have a label")
-            self.assertTrue("none" in manifest.items[0].label, "Label should have langauge")
-            self.assertTrue(isinstance(manifest.items[0].label["none"], list), "Label should be an array")
-            self.assertEqual(manifest.items[0].label["none"][0], "IMG_5969", "Label should match image name")
+            self.assertTrue("label" in manifest["items"][0], "Canvas should have a label")
+            self.assertTrue("none" in manifest["items"][0]["label"], "Label should have langauge")
+            self.assertTrue(isinstance(manifest["items"][0]["label"]["none"], list), "Label should be an array")
+            self.assertEqual(manifest["items"][0]["label"]["none"][0], "IMG_5969", "Label should match image name")
+
+    def test_full_info_v2(self):        
+        infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            os.chdir(tmpdir)
+            self.createDummyImage("IMG_v2", infoJsonFile)
+            manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
+            service = manifest["items"][0]["items"][0]["items"][0]["body"]["service"][0]
+            self.assertTrue("sizes" in service, f"Missing sizes inside service: \n{service}")
+
+    def test_full_info_v3(self):        
+        infoJsonFile = os.path.abspath("tests/fixtures/IMG_5969.json")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            os.chdir(tmpdir)
+            self.createDummyImage("IMG_v2", infoJsonFile)
+            manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
+            service = manifest["items"][0]["items"][0]["items"][0]["body"]["service"][0]
+            self.assertTrue("sizes" in service, f"Missing sizes inside service: \n{service}")
 
     def test_malformed_image(self):
         infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
@@ -59,6 +76,6 @@ class TestUpdateManifest(unittest.TestCase):
             self.createDummyImage("IMG_5969", infoJsonFile)
 
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir)
-            self.assertEqual(manifest.id, "https://test.github.io/testRepo/images/manifest.json")
-            self.assertEqual(len(manifest.items), 0, "Manifest should no canvases as only image is malformed")        
+            self.assertEqual(manifest["id"], "https://test.github.io/testRepo/images/manifest.json")
+            self.assertEqual(len(manifest["items"]), 0, "Manifest should no canvases as only image is malformed")        
 
