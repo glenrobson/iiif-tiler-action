@@ -20,14 +20,21 @@ def getUserRepo():
     repo = repo.replace(".git","")
     return (username,repo)
 
-def createManifest(username, repo, manifestName, imageDir):    
+def createManifest(username, repo, manifestName, imageDir, skipImageValidation=False):    
     manifest = Manifest(id=f"https://{username}.github.io/{repo}/{manifestName}", label=f"All images loaded in {username}/{repo} project")
 
     for image in os.listdir(imageDir):
         if os.path.isdir(f"{imageDir}/{image}") and os.path.exists(f"{imageDir}/{image}/info.json"):
             print (f"Adding {imageDir}/{image}/info.json to Manifest")
             with open(f"{imageDir}/{image}/info.json", "r") as file:
-                # Check image is valid before adding
+                if not skipImageValidation:
+                    # Check image is valid before adding
+                    if not os.path.isdir(f"{imageDir}/{image}/full"):
+                        print (f"Image: {imageDir}/{image} is malformed it doesn't have a full directory.")
+                        print ("Skipping")
+                        continue
+                    
+
                 infoJson = json.load(file)
                 root=f"https://{username}.github.io/{repo}/{imageDir}/{image}"
 
