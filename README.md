@@ -20,6 +20,8 @@ Inputs:
  * `output-dir` the location to store the generated image tiles. Default "images/"
  * `manifest` the location of the manifest which will contain links to all images in the `output-dir`. Default "images/manifest.json"
 
+An example project that uses this action is available at [iiif-test/test2](https://github.com/iiif-test/test2).
+
 ## Example action
 
 The following action watches the `images/uploads/` directory and sub directory for uploaded images. It then turns them into level0 IIIF images in the `images` directory and generates a manifest.json in the `images` directory contain links to all of the images. It then commits these images and manifest back to the source repository. 
