@@ -1,5 +1,5 @@
 # iiif-tiler-action
-A github action to create level0 tiles using [iiif-tiler](https://github.com/glenrobson/iiif-tiler) with a Github action. They level0 images and manifest.json can be served using Github pages. 
+A github action to create level0 tiles using [iiif-tiler](https://github.com/glenrobson/iiif-tiler) with a Github action. The level0 images and manifest.json can be served using Github pages. 
 
 # Usage
 This action monitors a directory and if it finds an image it will convert it into a level0 tiled image. It will then go through the output directory and create a manifest.json with links to any images it finds. 
