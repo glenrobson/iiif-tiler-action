@@ -70,6 +70,10 @@ runs:
     - name: Remove iiif-tiler
       run: rm iiif-tiler.jar
       shell: bash
+
+    - name: Remove empty directories
+      run: find ${{ inputs.output-dir }} -type d -empty -delete -print  
+      shell: bash
         
     - name: Update Manifest
       run: python -m iiif_tiler_action.updateManifest
