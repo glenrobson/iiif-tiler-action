@@ -1,5 +1,8 @@
 name: 'iiif-level0-action'
 description: 'A github action to create level0 tiles with a Github action'
+branding:
+  icon: 'image'
+  color: 'yellow'
 inputs:
   input-dir-v2:  # id of input
     description: 'Directory where input images for IIIF v2 are located'
