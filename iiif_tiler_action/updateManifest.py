@@ -1,4 +1,4 @@
-from iiif_prezi3 import Manifest, config, ResourceItem, ServiceItem1, ServiceItem, Annotation, AnnotationPage, Canvas
+from iiif_prezi3 import Manifest, config, AnnotationBody, ServiceV2, ServiceV3, Annotation, AnnotationPage, Canvas
 import json
 import subprocess
 import os
@@ -39,7 +39,7 @@ def createManifest(username, repo, manifestName, imageDir, skipImageValidation=F
                 infoJson = json.load(file)
                 root=f"https://{username}.github.io/{repo}/{imageDir}/{image}"
 
-                body = ResourceItem(id="http://example.com", type="Image")
+                body = AnnotationBody(id="http://example.com", type="Image")
                 if 'type' not in infoJson:
                     # Assume v2
 
