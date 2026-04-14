@@ -88,7 +88,7 @@ class TestUpdateManifest(unittest.TestCase):
             self.createDummyImage("IMG_v3", infoJsonFile2)
 
             manifest = updateManifest.createManifest("test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
-            self.assertTrue("@id" in manifest["items"][0]["items"][0]["items"][0]["body"]["service"][0], "First should be v2")
+            self.assertTrue("@id" in manifest["items"][0]["items"][0]["items"][0]["body"]["service"][0], f"First should be v2 found: {manifest['items'][0]['items'][0]['items'][0]['body']['service'][0]}")
             self.assertEqual(manifest["items"][0]["items"][0]["items"][0]["body"]["service"][0]["@id"], "https://iiif-test.github.io/test2/images/IMG_5969_V2", "First canvas has incorrect info.json")
             self.assertTrue("id" in manifest["items"][1]["items"][0]["items"][0]["body"]["service"][0], "Second canvas should be v2")
             self.assertEqual(manifest["items"][1]["items"][0]["items"][0]["body"]["service"][0]["id"], "https://iiif-test.github.io/test2/images/IMG_5969", "Second canvas has incorrect info.json")
