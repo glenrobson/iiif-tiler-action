@@ -21,10 +21,14 @@ def getUserRepo():
     return (username,repo)
 
 def createManifest(username, repo, manifestName, imageDir, skipImageValidation=False):    
-    manifest = Manifest(id=f"https://{username}.github.io/{repo}/{manifestName}", label=f"All images loaded in {username}/{repo} project")
+    manifest = Manifest(id=f"https://{username.lower()}.github.io/{repo}/{manifestName}", label=f"All images loaded in {username}/{repo} project")
 
     info_jsons = {}
-    for image in os.listdir(imageDir):
+    images = sorted(
+            os.listdir(imageDir),
+            key=lambda image: os.path.getmtime(f"{imageDir}/{image}")
+        )
+    for image in images:
         if os.path.isdir(f"{imageDir}/{image}") and os.path.exists(f"{imageDir}/{image}/info.json"):
             print (f"Adding {imageDir}/{image}/info.json to Manifest")
             with open(f"{imageDir}/{image}/info.json", "r") as file:
