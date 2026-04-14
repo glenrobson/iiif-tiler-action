@@ -29,6 +29,16 @@ class TestUpdateManifest(unittest.TestCase):
             self.assertEqual(manifest["id"], "https://test.github.io/testRepo/images/manifest.json")
             self.assertEqual(len(manifest["items"]), 1, "Manifest should have only one canvas")
 
+    def test_capital_repo(self):
+        infoJsonFile = os.path.abspath("tests/fixtures/IMG_5969.json")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            os.chdir(tmpdir)
+            self.createDummyImage("IMG_5969", infoJsonFile)
+
+            manifest = updateManifest.createManifest("Test", "testRepo", "images/manifest.json", tmpdir, skipImageValidation=True)
+            self.assertEqual(manifest["id"], "https://test.github.io/testRepo/images/manifest.json")
+            self.assertEqual(len(manifest["items"]), 1, "Manifest should have only one canvas")        
+
     def test_v2_manifest(self):
         infoJsonFile = os.path.abspath("tests/fixtures/v2_info.json")
         with tempfile.TemporaryDirectory() as tmpdir:

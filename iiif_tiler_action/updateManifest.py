@@ -21,7 +21,7 @@ def getUserRepo():
     return (username,repo)
 
 def createManifest(username, repo, manifestName, imageDir, skipImageValidation=False):    
-    manifest = Manifest(id=f"https://{username}.github.io/{repo}/{manifestName}", label=f"All images loaded in {username}/{repo} project")
+    manifest = Manifest(id=f"https://{username.lower()}.github.io/{repo}/{manifestName}", label=f"All images loaded in {username}/{repo} project")
 
     info_jsons = {}
     for image in os.listdir(imageDir):
