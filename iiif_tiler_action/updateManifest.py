@@ -68,13 +68,21 @@ def createManifest(username, repo, manifestName, imageDir, skipImageValidation=F
 
     manifestJson = json.loads(manifest.json())
     # Add full info.jsons
-    for canvas in manifestJson["items"]:
-        for annoPage in canvas["items"]:
-            for anno in annoPage["items"]:
-                if "@id" in anno["body"]["service"][0]:
-                    anno["body"]["service"][0] = info_jsons[anno["body"]["service"][0]["@id"]]
-                else:
-                    anno["body"]["service"][0] = info_jsons[anno["body"]["service"][0]["id"]]
+    try:
+        for canvas in manifestJson["items"]:
+            for annoPage in canvas["items"]:
+                for anno in annoPage["items"]:
+                    if "@id" in anno["body"]["service"][0]:
+                        anno["body"]["service"][0] = info_jsons[anno["body"]["service"][0]["@id"]]
+                    else:
+                        anno["body"]["service"][0] = info_jsons[anno["body"]["service"][0]["id"]]
+    
+    except KeyError as e:
+        print(f"Key {e} not found.")
+        print(f"Available keys: {list(info_jsons.keys())}")
+        print(f"Dict contents: {info_jsons}")
+        raise e
+
     return manifestJson                    
 
 def getEnvironment():
