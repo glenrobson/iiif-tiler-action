@@ -41,7 +41,7 @@ def createManifest(username, repo, manifestName, imageDir, skipImageValidation=F
                     
 
                 infoJson = json.load(file)
-                root=f"https://{username}.github.io/{repo}/{imageDir}/{image}"
+                root=f"https://{username.lower()}.github.io/{repo}/{imageDir}/{image}"
 
                 body = AnnotationBody(id="http://example.com", type="Image")
                 if 'type' not in infoJson:

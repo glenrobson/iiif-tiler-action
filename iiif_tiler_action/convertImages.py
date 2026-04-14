@@ -10,7 +10,7 @@ def generateCommand(filename):
     output = os.environ["OUTPUT"]
     (username, project) = getUserRepo()
 
-    return f'java -jar iiif-tiler.jar -identifier "https://{username}.github.io/{project}/{output}/" -version "{version}" -output {output}/ {filename}'
+    return f'java -jar iiif-tiler.jar -identifier "https://{username.lower()}.github.io/{project}/{output}/" -version "{version}" -output {output}/ {filename}'
 
 def convertImages():
     input_dir = os.environ["INPUT_DIR"]
