@@ -24,15 +24,20 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up Python 3.x
+    - name: Set up Python 3.13
       uses: actions/setup-python@v7
       with:
         # Semantic version range syntax or exact version of a Python version
         python-version: '3.13' 
         # Optional - x64 or x86 architecture, defaults to x64
         architecture: 'x64' 
-        cache: 'pip'
-        cache-dependency-path: ${{ github.action_path }}/requirements.txt
+
+    - uses: actions/cache@v6
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-pip-${{ hashFiles(format('{0}/{1}', github.action_path, 'requirements.txt')) }}
+        restore-keys: |
+          ${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-pip-    
 
     - name: Install dependencies
       run: |
