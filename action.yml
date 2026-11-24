@@ -21,26 +21,18 @@ inputs:
      required: false
      default: 'images/manifest.json'  
 
-outputs:
-  generation:
-    description: "Generation output"
-    value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
   using: "composite"
   steps:
     - name: Set up Python 3.x
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v7
       with:
         # Semantic version range syntax or exact version of a Python version
-        python-version: '3.x' 
+        python-version: '3.13' 
         # Optional - x64 or x86 architecture, defaults to x64
         architecture: 'x64' 
-    - uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles(format('{0}/{1}', github.action_path, 'requirements.txt')) }}
-        restore-keys: |
-          ${{ runner.os }}-pip-    
+        cache: 'pip'
+        cache-dependency-path: ${{ github.action_path }}/requirements.txt
 
     - name: Install dependencies
       run: |

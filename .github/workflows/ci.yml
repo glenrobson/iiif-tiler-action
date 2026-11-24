@@ -11,20 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ '3.12' ]
+        python-version: [ '3.13' ]
     name: Python ${{ matrix.python-version }} sample
     steps:
       - uses: actions/checkout@v5
       - name: Setup python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-
-      - uses: actions/cache@v4
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
+          cache: 'pip'
+          cache-dependency-path: ${{ github.action_path }}/requirements.txt
 
       - name: Install
         run: pip install --no-cache-dir --upgrade -r requirements.txt
